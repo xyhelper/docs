@@ -1,19 +1,100 @@
-# SMTP-RELAY
-> SMTP中继服务
-XYHELPER SMTP中继服务，用于将邮件发送服务独立部署,避免泄漏主服务的IP地址。
+# SMTP 中继服务器
 
-## 介绍
-- 项目类型: 免费不开源
+这是一个用 Go 编写的 SMTP 中继服务器，主要用于隐藏源 IP 地址，防止在邮件的 `Received` 头部中暴露真实的源 IP。
+
+## 功能特性
+- **项目类型**: 免费不开源
+- **隐藏源 IP 地址**：移除邮件中可能暴露源 IP 的头部信息
+- **TLS 支持**：支持上游 SMTP 服务器的 TLS 连接
+- **IP 白名单**：可配置允许连接的客户端 IP 列表
+- **可配置的监听端口**和上游 SMTP 服务器
+- **环境变量配置**
 - 项目地址: [https://github.com/xyhelper/xyhelper-smtp-relay-deploy](https://github.com/xyhelper/xyhelper-smtp-relay-deploy)
+
+
+## 工作原理
+
+1. **客户端连接**：客户端连接到中继服务器
+2. **SMTP 协议处理**：中继服务器处理标准 SMTP 命令
+3. **邮件数据接收**：接收完整的邮件数据
+4. **头部清理**：移除可能暴露源 IP 的信息：
+   - `Received` 头部
+   - `X-Originating-IP` 头部
+   - `X-Remote-IP` 头部
+   - `X-Real-IP` 头部
+   - `X-Forwarded-For` 头部
+   - `X-Sender-IP` 头部
+   - `X-Source-IP` 头部
+5. **添加中继头部**：添加中继服务器自己的 `Received` 头部
+6. **上游转发**：通过上游 SMTP 服务器发送邮件
 
 ## 部署
 
 - 服务器要求
-  - 1核1G内存
+  - 1核1G内存(x86架构)
   - 10G硬盘
   - Ubuntu 20.04+
   - 已安装 Docker 和 Docker-Compose
   - 服务商未限制SMTP协议的使用
+  - 服务器已安装curl和git
+
+
+### 一键部署脚本
+```bash
+bash <(curl -sSL https://xyhelper.cn/script/install-smtp-relay.sh)
+```
+### 配置文件
+
+在 `smtp-relay` 目录下，有一个 `.env.example` 文件，您可以根据需要复制一份并重命名为 `.env`，然后编辑该文件以配置 SMTP 中继服务。
+```env
+# .env文件内容示例
+SMTP_HOST=smtp.exmail.qq.com # SMTP服务器地址
+SMTP_PORT=465              # SMTP服务器端口
+SMTP_USERNAME=support@xxxxx.com # SMTP用户名
+SMTP_PASSWORD=xxxxxxxxxxx # SMTP密码
+SENDER_EMAIL=support@xxxxx.com # 发件人邮箱地址
+RELAY_LISTEN_PORT=2525     # 中继服务器监听端口
+RELAY_ENABLE_TLS=true     # 是否启用TLS
+RELAY_ALLOWED_CLIENTS=127.0.0.1,::1,localhost # 允许连接的客户端IP地址列表,逗号分隔
+```
+### 启动/更新服务
+```bash
+cd smtp-relay
+./deploy.sh
+```
+### 查看日志
+```bash
+cd smtp-relay
+docker-compose logs -f --tail=100
+```
+### 停止服务
+```bash
+cd smtp-relay
+docker-compose down
+```
+### 重启服务
+```bash
+cd smtp-relay
+docker-compose restart
+```
+### 测试服务
+```bash
+./simple_send.py youremail@domain.com
+```
+### 常见问题
+
+1. **连接被拒绝**
+   - 检查端口是否正确
+   - 检查防火墙设置
+   - 检查服务是否正在运行
+
+2. **认证失败**
+   - 检查上游 SMTP 服务器凭据
+   - 检查网络连接
+
+3. **邮件发送失败**
+   - 检查上游服务器配置
+   - 查看详细日志信息
 
 
 ## 扩展阅读
