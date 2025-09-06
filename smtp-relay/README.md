@@ -43,7 +43,7 @@
 
 ### 一键部署脚本
 ```bash
-bash <(curl -sSL https://xyhelper.cn/script/install-smtp-relay.sh)
+bash <(curl -sSL https://docs.xyhelper.cn/scripts/install-smtp-relay.sh)
 ```
 ### 配置文件
 
