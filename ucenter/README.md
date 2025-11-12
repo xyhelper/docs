@@ -242,6 +242,10 @@ PORT=80
   ![alt text](image-11.png)
 - 选择左侧菜单Environment中的Features进行登录配置，根据需要选择配置，注意可关闭Mobile Basic Authentication，目前不支持手机号验证身份
   ![alt text](image-12.png)
+- 选择Magic Login Link开启，则启用邮箱链接登录，无需输入密码
+- 选择合适的登录验证方式，点击下面的"Save",保存配置
+- 按照上文描述将Client ID、Client Secret、authorizer部署地址设置到ucenter的配置文件中，则ucenter可使用authorizer登录
+- 如需使用authorizer的其他功能，请查看官方文档
 
 ### 启动/更新服务
 ```bash
