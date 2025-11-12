@@ -391,14 +391,14 @@ docker-compose restart
       - sign：          签名，参数按照ASCII码升序排列之后的加密钥的签名，密钥从商户管理中获取
     - 请求响应：无需给ucenter用户中心响应
     - 注意：sign_type和sign不参与参数签名加密，商户每次接收到回调时建议都进行验签，防止参数被篡改
-  - 例如，开源项目New API对接ucenter易支付配置
+  - 例如，开源项目New API（https://docs.newapi.pro）对接ucenter易支付配置
     - 在ucenter后台管理端创建商户，New API，获取到商户ID和商户密钥
     ![alt text](image-19.png)
     - 登录New API项目，找到左侧菜单中系统设置，在系统设置中找到支付设置，
       - 易支付商户ID：上一步骤中在ucenter获取的商户ID
       - 易支付商户密钥：上一步骤中在ucenter获取的商户密钥
       - 支付地址：上文易支付对接接口中介绍的易支付支付接口地址，例如：https://yourdomain/easy/pay,
-      - 回调地址：则是您服务器的不是地址，例如：https://yourdomain ，对于New API项目，他的notify_url是项目内部设置的，这里只填写您的服务器地址即可
+      - 回调地址：您服务器的部署地址，例如：https://yourdomain ，对于New API项目，他的notify_url是项目内部设置的，这里只填写您的服务器地址即可
       - 其他按照New API项目要求根据需要填写
     ![alt text](image-20.png)
     - 保存设置之后，您部署的New API项目就可以通过易支付接口对接ucenter服务了
