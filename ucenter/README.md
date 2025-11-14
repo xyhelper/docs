@@ -83,7 +83,7 @@ services:
   - 支持oauth协议的身份认证与授权服务平台，例如：auth0（https://auth0.com） 或者 authorizer（https://authorizer.dev） 
   - auth0和authorizer获取AUTH_DOMAIN、AUTH_CLIENT_ID、AUTH_CLIENT_SECRET，请查看部署-auth0和部署-authorizer章节
   - 根据身份认证服务授权平台配置手册进行配置
-  - 配置完身份证认证服务授权平台之后获取平台的域名、客户端id和客户端秘钥设置到AUTH_DOMAIN、AUTH_CLIENT_ID、AUTH_CLIENT_SECRET
+  - 配置完身份认证服务授权平台之后获取平台的域名、客户端id和客户端秘钥设置到AUTH_DOMAIN、AUTH_CLIENT_ID、AUTH_CLIENT_SECRET
   - 例如：
        - -AUTH_DOMAIN=oauthdomain.com
        - -AUTH_DOMAIN=oauth-client-id
