@@ -340,9 +340,11 @@ docker-compose restart
     - 接口地址：https://yourdomain/oauth/token
     - 请求方式：post
     - 请求参数：
-      - code：               授权码，必填，string，/authorize授权后，从系统回调地址redirect_uri中获取
+      - grant_type：         授权类型，必填，string，可选值：authorization_code或者refresh_token，用于通过code换取token或者通过refresh_token刷新access_token
+      - code：               授权码，非必填，string，/authorize授权后，从系统回调地址redirect_uri中获取，grant_type值为authorization_code时必填
       - client_id：          应用id，必填，string，在上文"工作台-应用管理"中注册获取，用于校验应用是否在ucenter中注册
       - client_secret：      应用密钥，必填，string，在上文"工作台-应用管理"中注册获取，用于校验应用是否在ucenter中注册
+      - refresh_token：      刷新令牌，非必填，string，用于刷新access_token，grant_type值为refresh_token时必填
     - 请求响应：
       - access_token：              访问令牌
       - refresh_token：             刷新令牌
