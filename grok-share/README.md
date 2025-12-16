@@ -197,6 +197,7 @@ docker-compose restart
     - 请求方式：post
     - 请求参数：
       - grant_type：         授权类型，必填，string，可选值：authorization_code或者refresh_token，用于通过code换取token或者通过refresh_token刷新access_token
+        - code和refresh_token两种逻辑都要实现，share在换车时，是使用refresh_token进行刷新access_token进行登录的
       - code：               授权码，非必填，string，用户自定义OAuth2.0授权后，grok-share从回调地址redirect_uri中获取，grant_type值为authorization_code时必填
       - client_id：          应用id，非必填，string，如果您的Oauth2.0服务没有校验客户端id和密钥，可不填
       - client_secret：      应用密钥，非必填，string，如果您的Oauth2.0服务没有校验客户端id和密钥，可不填
