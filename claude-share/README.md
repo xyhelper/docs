@@ -3,7 +3,7 @@
 ## 部署
 
 - 前置条件
-  - 客户可对接符合标准OAuth2.0协议的自定义用户服务，或选择对接ucenter用户中心服务
+  - 客户可对接符合标准OAuth2.0协议的自定义用户服务，或选择对接ucenter用户中心服务，或选择对接ucenter-lite用户中心演示版
   - 若对接用户自定义OAuth2.0服务，可查看下面用户OAuth2.0对接步骤说明
   - 若对接ucenter服务，需要将ucenter部署完成并获取相关信息，ucenter部署及配置请查看ucenter部署文档
 - 服务器要求
@@ -50,7 +50,7 @@ services:
       - TZ=Asia/Shanghai
       - CLAUDEPROXY=                #claude代理地址
       - CALLBACKURL=                #本服务回调地址
-      - XYUCENTER=                  #用户自定义OAuth2.0服务地址或ucenter（用户中心）部署地址
+      - XYUCENTER=                  #用户自定义OAuth2.0服务地址或ucenter（用户中心）部署地址或ucenter-lite（用户中心演示版）部署地址
       - APPID=                      #子应用ID
       - APPSECRET=                  #子应用密钥
       - APPJWTSECRETKEY=            #子应用JWT token秘钥
@@ -78,7 +78,7 @@ services:
   - 例如：
        - -CALLBACKURL=https://yourdomain.com
 - XYUCENTER
-  - 用户自定义OAuth2.0服务地址或ucenter用户中心部署地址，例如：https://ucenter.com， 设置到XYUCENTER
+  - 用户自定义OAuth2.0服务地址或ucenter用户中心部署地址或ucenter-lite用户中心演示版部署地址，例如：https://ucenter.com， 设置到XYUCENTER
   - 例如：
        - -XYUCENTER=https://ucenter.com
 - APPID
@@ -95,6 +95,7 @@ services:
   - jwt密钥
   - 如对接用户自定义OAuth2.0服务，则需要用户自定义OAuth2.0服务使用该密钥对access_token进行加密，以便claude-share服务解析关键参数
   - 如对接ucenter服务，则该密钥保持与ucenter配置文件中的JWT_SECRET_KEY保持一致
+  - 如对接ucenter-lite服务，则该密钥保持与ucenter-lite配置文件中的JWT_SECRET_KEY保持一致
   - 例如ucenter中的：-JWT_SECRET_KEY=XXX，这里也配置一致
      - -JWT_SECRET_KEY=XXX
   
