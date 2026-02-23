@@ -52,9 +52,9 @@ services:
       - GROKPROXY=                                #grok代理地址
       - CALLBACKURL=                              #本服务回调地址
       - XYUCENTER=                                #用户自定义OAuth2.0服务地址或ucenter（用户中心）部署地址或ucenter-lite（用户中心演示版）部署地址
-      - APPID=                                    #子应用ID
-      - APPSECRET=                                #子应用密钥
-      - APPJWTSECRETKEY=                          #子应用JWT token秘钥
+      - APPID=                                    #子应用ID（如对接ucenter-lite则无需填写该项，对接ucenter则必填）
+      - APPSECRET=                                #子应用密钥（如对接ucenter-lite则无需填写该项，对接ucenter则必填）
+      - APPJWTSECRETKEY=                          #子应用JWT token秘钥（必填项，保证和用户中心（ucenter或ucenter-lite）的jwt密钥一致）
     volumes:
       - ./backend/manifest:/app/manifest
       - ./config/config.yaml:/app/config.yaml     #config.yaml配置文件
