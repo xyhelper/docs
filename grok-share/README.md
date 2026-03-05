@@ -3,9 +3,12 @@
 ## 部署
 
 - 前置条件
-  - 客户可对接符合标准OAuth2.0协议的自定义用户服务，或选择对接ucenter用户中心服务，或选择对接ucenter-lite用户中心演示版
-  - 若对接用户自定义OAuth2.0服务，可查看下面用户OAuth2.0对接步骤说明
-  - 若对接ucenter服务，需要将ucenter部署完成并获取相关信息，ucenter部署及配置请查看ucenter部署文档
+  - 部署grok-share服务部署时，授权服务对接有以下四种方式可选
+    - 对接ucenter用户中心服务，详细部署及配置请参考ucenter部署文档
+    - 对接ucenter-lite用户中心演示版，详细部署及配置请参考ucenter-lite部署文档
+    - 对接自定义OAuth2.0服务，具体对接操作请参见本文档“自定义OAuth2.0服务对接”章节
+    - 对接自定义授权服务，具体对接操作请参见本文档“自定义授权服务对接”章节
+  - 用户可选择任一授权方式部署grok-share服务
 
 - 服务器要求
   - 至少2核2G内存(x86架构)
@@ -37,6 +40,8 @@ bash <(./deploy.sh)
 
 #### docker-compose.yml文件
 
+!> **注意**: XYUCENTER与AUTHORIZERURL二者只能填写其中一个，默认填写AUTHORIZERURL之后XYUCENTER自动失效，请注意docker-compose.yml选填项规则.
+
 在grok-share-server目录下，有一个docker-compose.yml文件，找到这个文件并打开，找到backend部分
 
 ```docker-compose.yml
@@ -49,12 +54,13 @@ services:
       - "8800:8001"
     environment:
       - TZ=Asia/Shanghai
-      - GROKPROXY=                                #grok代理地址
-      - CALLBACKURL=                              #本服务回调地址
-      - XYUCENTER=                                #用户自定义OAuth2.0服务地址或ucenter（用户中心）部署地址或ucenter-lite（用户中心演示版）部署地址
-      - APPID=                                    #子应用ID（如对接ucenter-lite则无需填写该项，对接ucenter则必填）
-      - APPSECRET=                                #子应用密钥（如对接ucenter-lite则无需填写该项，对接ucenter则必填）
-      - APPJWTSECRETKEY=                          #子应用JWT token秘钥（必填项，保证和用户中心（ucenter或ucenter-lite）的jwt密钥一致）
+      - GROKPROXY=                                #grok代理地址  （必填）
+      - CALLBACKURL=                              #本服务回调地址 （选填，对接ucenter、ucenter-lite、自定义OAuth2.0时必填）
+      - XYUCENTER=                                #ucenter服务地址/ucenter-liete服务地址/自定义OAuth2.0服务地址 （选填，对接相应服务时必填）
+      - AUTHORIZERURL=                            #自定义授权服务接口地址 （选填，若对接用户自定义授权服务，必填，且设置该值后默认开启自定义授权服务，XYUCENTER配置即失效）
+      - APPID=                                    #子应用ID  （选填，对接ucenter则必填，其他可不填）
+      - APPSECRET=                                #子应用密钥 （选填，对接ucenter则必填，其他可不填）
+      - APPJWTSECRETKEY=                          #子应用JWT token秘钥  （选填，选择对接ucenter、ucenter-lite、自定义OAuth2.0时必填，且保证和授权服务jwt密钥一致）
     volumes:
       - ./backend/manifest:/app/manifest
       - ./config/config.yaml:/app/config.yaml     #config.yaml配置文件
@@ -79,9 +85,13 @@ services:
   - 例如：
        - -CALLBACKURL=https://yourdomain.com
 - XYUCENTER
-  - 用户自定义OAuth2.0服务地址或ucenter用户中心部署地址或ucenter-lite用户中心演示版部署地址，例如：https://ucenter.com， 设置到XYUCENTER
+  - 自定义OAuth2.0服务地址或ucenter用户中心部署地址或ucenter-lite用户中心演示版部署地址，例如：https://ucenter.com， 设置到XYUCENTER
   - 例如：
        - -XYUCENTER=https://ucenter.com
+- AUTHORIZERURL
+  - 自定义授权服务接口地址（服务接口地址）
+  - 例如：
+       - -AUTHORIZERURL=https://yourAuth/login
 - APPID
   - 用户自定义OAuth2.0服务或ucenter用户中心配置的该子应用的应用代码，用户自定义OAuth2.0服务自行设置获取，ucenter方式请查看ucenter部署步骤
   - 用于校验是否在用户中心注册，如果用户自定义OAuth2.0服务无需校验，可以不配置，但若对接ucenter则必须配置
@@ -179,10 +189,10 @@ cd grok-share-server
 docker-compose restart
 ```
 
-## 用户自定义OAuth2.0服务对接
+## 自定义OAuth2.0服务对接
 
-### 自定义服务提供接口
-- 需用户自定义服务提供Oauth2.0标准接口
+### 自定义OAuth2.0服务提供接口
+- 需提供Oauth2.0标准接口
   - 授权接口
     - 接口地址：https://yourdomain/authorize
     - 请求方式：get
@@ -210,7 +220,7 @@ docker-compose restart
       - refresh_expires_in：        刷新令牌过期时间
       - token_type：                令牌类型
 
-### access_token数据及加密
+### access_token数据结构和加密规则
 - access_token数据结构
   - 保证access_token加密前和解密后数据为下面列出的json格式
   - products数组为账号可访问的grok服务，以grok-开头，二级以free、superGrok、heavy拼接，也可定义三级，三级可按照自己使用场景自行定义，例如可自定义成grok-free-test，也可不定义三级
@@ -237,6 +247,36 @@ docker-compose restart
   - access_token解密密钥为环境变量配置中的APPJWTSECRETKEY，用户自定义OAuth2.0服务中加密要保证密钥相同
   - 使用 JWT 标准的 HS256（HMAC-SHA256）对称加密签名方式进行令牌签名，令牌（密钥）与grok-share环境变量配置保持一致
 
+## 自定义授权服务对接
+
+### 需提供授权服务接口
+
+!> **注意**: docker-compose.yml填写了AUTHORIZERURL的值默认开启：自定义授权服务对接，其他授权服务如ucenter、ucenter-lite、自定义OAuth2.0均失效.
+
+  - 授权接口
+    - 接口地址：https://用户自定义/xxx（需配置在docker-compose.yml系统变量：AUTHORIZERURL），注意：此为服务接口地址
+    - 请求方式：post
+    - 请求参数：
+      - userToken：           用户token，必填，string
+      - carid：               车辆id（车队名称），选填，string
+      - 示例：
+      ```请求数据结构
+            {
+                "userToken": "", 
+                "carid": "",
+            }
+      ```
+    - 请求响应：
+      - code：  状态码，0：登录成功，1：无权限，-1：登录失败
+      - msg：   提示信息
+      - 示例：
+      ```响应数据结构
+            {
+                "code": 0, 
+                "msg": "登录成功",
+            }
+      ```
+
 ## 使用
 
 ### 后台管理
@@ -253,3 +293,25 @@ docker-compose restart
   ![alt text](image-1.png)
 - 选择账号订购的grok服务车队或者免费车队，点击访问，进行OAuth2.0登录，登录之后即可使用grok-share服务
 
+### 接口地址访问
+- 使用前提
+  - 授权服务必须选择：自定义授权服务
+  - 对接ucenter、ucenter-lite、自定义OAuth2.0均无法使用该接口
+- 接口
+  - 接口地址：http://yourdomain/auth/loginToken?userToken=xxx&carid=xxx
+  - 请求方式：get
+  - URL参数：
+    - userToken：用户token，必填
+    - carid：车辆id（车队名称），选填，（若传递则按照该车辆进行会话，不传递则随机选择车辆进行会话）
+  - 请求响应：
+    - 登录成功，直接跳转会话页面
+    - 登录失败：
+      - code：错误码
+      - msg：错误信息
+      - 示例：
+      ```失败响应数据结构
+            {
+              "code": 500,
+              "msg": "no AUTHORIZERURL service configured"
+            }
+      ```  
