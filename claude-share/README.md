@@ -39,7 +39,7 @@ bash <(./deploy.sh)
 
 #### docker-compose.yml文件
 
-!> **注意**: XYUCENTER与AUTHORIZERURL二者只能填写其中一个，默认填写AUTHORIZERURL之后XYUCENTER自动失效，请注意docker-compose.yml选填项规则.
+!> **注意**: XYUCENTER 与 AUTHORIZERURL 二选一，填写 AUTHORIZERURL 后 XYUCENTER 自动失效，请勿同时配置，同时注意docker-compose.yml选填项规则.
 
 在claude-share-server目录下，有一个docker-compose.yml文件，找到这个文件并打开，找到backend部分
 
@@ -88,7 +88,7 @@ services:
   - 例如：
        - -XYUCENTER=https://ucenter.com
 - AUTHORIZERURL
-  - 自定义授权服务接口地址（服务接口地址）
+  - 自定义授权服务接口地址（服务接口地址），该项与 XYUCENTER 二选一，填写该项后 XYUCENTER 配置自动失效
   - 例如：
        - -AUTHORIZERURL=https://yourAuth/login
 - APPID
@@ -229,6 +229,7 @@ docker-compose restart
     - claude-pro：claude的pro账号服务
     - claude-max：claude的max账号服务
   - 访问服务权限等级：max>pro>free，即拥有pro服务的账号也可访问free车辆，拥有max服务的账号也可访问pro和free的车辆
+
 ```access_token数据结构
 {
     "username": "用户名，string类型，必填，可与email保持一致", 
@@ -253,13 +254,13 @@ docker-compose restart
 
 ### 需提供授权服务接口
 
-!> **注意**: docker-compose.yml填写了AUTHORIZERURL的值默认开启：自定义授权服务对接，其他授权服务如ucenter、ucenter-lite、自定义OAuth2.0均失效.
+!> **注意**: 一旦配置 AUTHORIZERURL，系统将自动启用自定义授权服务，ucenter、ucenter-lite、自定义 OAuth2.0 等其他授权方式将同时失效
 
   - 授权接口
     - 接口地址：https://用户自定义/xxx（需配置在docker-compose.yml系统变量：AUTHORIZERURL），注意：此为服务接口地址
     - 请求方式：post
     - 请求参数：
-      - userToken：           用户token，必填，string
+      - userToken：           用户token，必填，string（userToken作为用户唯一属性在share服务中是会话隔离的重要依据，同一用户的userToken请勿随意更改）
       - carid：               车辆id（车队名称），选填，string
       - 示例：
       ```请求数据结构
@@ -303,17 +304,8 @@ docker-compose restart
   - 接口地址：http://yourdomain/auth/loginToken?userToken=xxx&carid=xxx
   - 请求方式：get
   - URL参数：
-    - userToken：用户token，必填
-    - carid：车辆id（车队名称），选填，（若传递则按照该车辆进行会话，不传递则随机选择车辆进行会话）
+    - userToken：用户token，必填（userToken作为用户唯一属性在share服务中是会话隔离的重要依据，同一用户的userToken请勿随意更改）
+    - carid：车辆id（车队名称），选填（若传递则按照该车辆进行会话，不传递则随机选择车辆进行会话）
   - 请求响应：
-    - 登录成功，直接跳转会话页面
-    - 登录失败：
-      - code：错误码
-      - msg：错误信息
-      - 示例：
-      ```失败响应数据结构
-            {
-              "code": 500,
-              "msg": "no AUTHORIZERURL service configured"
-            }
-      ```  
+    - 登录成功：直接跳转会话页面
+    - 登录失败：页面将自动跳转至 error.html，并展示具体的错误提示信息
