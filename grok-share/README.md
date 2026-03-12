@@ -264,7 +264,7 @@ docker-compose restart
       ```请求数据结构
             {
                 "userToken": "", 
-                "carid": "",
+                "carid": ""
             }
       ```
     - 请求响应：
@@ -275,6 +275,7 @@ docker-compose restart
             {
                 "code": 0, 
                 "msg": "登录成功",
+                "expireTime":"yyyy-MM-dd HH:mm:ss"  userToken过期时间，不填默认1周
             }
       ```
 
