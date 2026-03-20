@@ -257,11 +257,11 @@ docker-compose restart
 !> **注意**: 一旦配置 AUTHORIZERURL，系统将自动启用自定义授权服务，ucenter、ucenter-lite、自定义 OAuth2.0 等其他授权方式将同时失效
 
   - 授权接口
-    - 接口地址：https://用户自定义/xxx（需配置在docker-compose.yml系统变量：AUTHORIZERURL），注意：此为服务接口地址
+    - 接口地址：https://用户自定义/xxx（需配置在docker-compose.yml系统变量：AUTHORIZERURL），注意：此为授权服务接口地址
     - 请求方式：post
     - 请求参数：
       - userToken：           用户token，必填，string（userToken作为用户唯一属性在share服务中是会话隔离的重要依据，同一用户的userToken请勿随意更改）
-      - carid：               车辆id（车队名称），选填，string
+      - carid：               车辆id（车队名称），必填，string
       - 示例：
       ```请求数据结构
             {
@@ -277,7 +277,7 @@ docker-compose restart
             {
                 "code": 0, 
                 "msg": "登录成功",
-                "expireTime":"yyyy-MM-dd HH:mm:ss"  userToken过期时间，不填默认1周
+                "expireTime":"yyyy-MM-dd HH:mm:ss"  //userToken过期时间，不填默认1周
             }
       ```
 

@@ -8,4 +8,5 @@
     * [Authorizer](/authorizer/)
     * [Claude-Share](/claude-share/)
     * [Grok-Share](/grok-share/)
+    * [ChatGPT-Share](/chatgpt-share/)
 * [联系我们](/contact)
