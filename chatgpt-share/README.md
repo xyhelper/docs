@@ -11,8 +11,6 @@ bash <(curl -sSfL https://raw.githubusercontent.com/xyhelper/chatgpt-share-serve
 
 #### docker-compose.yml文件
 
-!> **注意**: XYUCENTER 与 AUTHORIZERURL 二选一，填写 AUTHORIZERURL 后 XYUCENTER 自动失效，请勿同时配置，同时注意docker-compose.yml选填项规则.
-
 在claude-share-server目录下，有一个docker-compose.yml文件，找到这个文件并打开，找到chatgpt-share-server部分
 
 ```docker-compose.yml
