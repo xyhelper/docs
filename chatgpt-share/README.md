@@ -7,11 +7,25 @@
 bash <(curl -sSfL https://raw.githubusercontent.com/xyhelper/chatgpt-share-server/deploy/quick-install.sh | bash)
 ```
 
+### 手动部署
+- 克隆仓库到服务器上
+```bash
+bash <(git clone --depth=1 https://github.com/xyhelper/chatgpt-share-server-deploy.git chatgpt-share-server)
+```
+- 进入目录
+```bash
+bash <(cd chatgpt-share-server)
+```
+- 启动服务
+```bash
+bash <(./deploy.sh)
+```
+
 ### 配置文件
 
 #### docker-compose.yml文件
 
-在claude-share-server目录下，有一个docker-compose.yml文件，找到这个文件并打开，找到chatgpt-share-server部分
+在chatgpt-share-server目录下，有一个docker-compose.yml文件，找到这个文件并打开，找到chatgpt-share-server部分
 
 ```docker-compose.yml
 # docker-compose.yml文件内容示例
@@ -76,7 +90,7 @@ bash <(curl -sSfL https://raw.githubusercontent.com/xyhelper/chatgpt-share-serve
 - 工作台-用户管理
   - 管理ChatGPT的用户
 - 工作台-会话管理
-  - 管理ChatGPT的claude的会话
+  - 管理ChatGPT的会话
 
 ### 选车页面
 - ChatGPT-share-server部署成功之后，访问：http://yourdomain, 访问选车页面
