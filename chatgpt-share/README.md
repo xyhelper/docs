@@ -1,5 +1,7 @@
 # ChatGPT-Share服务
 
+- 本文档仅介绍 ChatGPT-Share 与授权服务的对接方法，完整文档请访问：https://chatgpt-share-server-aug.pages.dev/
+
 ## 部署
 
 ### 一键部署脚本
