@@ -67,6 +67,7 @@ services:
       - APPSECRET=                                #子应用密钥 （条件必填：对接ucenter时必填，其他可不填）
       - APPJWTSECRETKEY=                          #子应用JWT token密钥  （条件必填：对接ucenter、ucenter-lite、自定义OAuth2.0时必填，且需与授权服务JWT密钥一致）
       - AUDIT_LIMIT_URL=                          #自定义审核限流接口地址 （选填，填写之后，请自行实现审核限流服务，系统不再使用内置审核限流模式，config.yaml中内容审核、模型速率限制配置以及外挂敏感词文件keywords.txt失效）
+      - APIAUTH=                                  #adminapi接口鉴权秘钥  (选填，如果需要使用adminapi接口，请填写，并在调用接口时在 header 中传递 apiauth 字段，值为 APIAUTH配置的值)
     volumes:
       - ./backend/manifest:/app/manifest
       - ./config/config.yaml:/app/config.yaml     #config.yaml配置文件
@@ -120,6 +121,11 @@ services:
   - 对接方式请查看本文档：自定义审核限流对接
   - 例如：
     - `AUDIT_LIMIT_URL=https://yourdomain/audit_limit`
+- APIAUTH
+  - adminapi接口鉴权秘钥
+  - 当配置了环境变量 APIAUTH 或在 config.yaml 中配置了 APIAUTH 时，将启用 API 对接功能
+  - 后台管理页面使用到的/admin/grok/xxx接口，将会有一份同样功能的副本 /adminapi/grok/xxx，这些接口将会使用 API 对接的方式进行访问
+  - 具体使用即在 header 中传递 apiauth 字段，值为 APIAUTH，即可访问
   
 #### config.yaml配置文件              
 
