@@ -27,4 +27,5 @@ XYHELPER是一个集成多种服务的解决方案，旨在为用户提供便捷
 * [Claude-Share](/claude-share/) - Claude共享服务，用于共享Claude账号
 * [Grok-Share](/grok-share/) - Grok共享服务，用于共享Grok账号
 * [ChatGPT-Share](/chatgpt-share/) - ChatGPT共享服务，用于共享ChatGPT账号
+* [ChatGPT-Api](/chatgpt-api/) - 基于chatgpt官网账号转接对外实现API服务
 
