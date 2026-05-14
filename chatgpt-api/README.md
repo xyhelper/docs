@@ -136,6 +136,11 @@ bash <(./deploy.sh)
     - http://服务器IP:8100/v1/chat/models
 - codex会话接口
     - http://服务器IP:8100/v1/chat/responses
+- 图像生成接口
+    - http://服务器IP:8100/v1/images/generations
+- 图像编辑接口
+    - http://服务器IP:8100/v1/images/edits
+
 
 
 
