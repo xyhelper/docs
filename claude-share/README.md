@@ -285,12 +285,16 @@ docker-compose restart
       - code：  状态码，0：登录成功，1：无权限，-1：登录失败
       - msg：   提示信息
       - expireTime：userToken过期时间，格式为 `yyyy-MM-dd HH:mm:ss`，不返回时默认1周
+      - nickname：用户昵称，不返回share中默认使用车辆原始昵称
+      - email：用户邮箱，不返回share中默认使用车辆原始邮箱
       - 示例：
       ```json
             {
                 "code": 0, 
                 "msg": "登录成功",
-                "expireTime": "yyyy-MM-dd HH:mm:ss"
+                "expireTime": "yyyy-MM-dd HH:mm:ss",
+                "nickname":"张三",
+                "email":"zhangsan@example.com"
             }
       ```
 
